@@ -1,5 +1,7 @@
 # vuex-learn
 
+# Node v11.10.0
+
 ## Project setup
 ```
 npm install

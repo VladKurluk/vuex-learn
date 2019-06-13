@@ -1,6 +1,10 @@
 <template>
   <div id="app">
-    <div class="post" v-for="post in posts" :key="post.id">
+    <post-form></post-form>
+    
+    <input type="text" v-on:input="postUpdate" v-model="numberPost" placeholder="Сколько нужно постов">
+    <div class="post" v-for="post in getPosts" :key="post.id">
+      <span>{{ `${post.id}/${postsCount}` }}</span>
       <h1>{{ post.title }}</h1>
       <p>{{ post.body }}</p>
     </div>
@@ -8,18 +12,35 @@
 </template>
 
 <script>
+import {mapGetters, mapActions} from 'vuex'
+import PostForm from './components/PostForm'
 
 export default {
+  name: 'app',
+  components: {
+    PostForm
+  },
   data() {
     return {
-      posts: []
+      numberPost: 2
     }
   },
-  name: 'app',
+  computed: {
+    getPosts() {
+      return this.$store.getters.getPosts
+    },
+    postUpdate() {
+      this.fetchPosts(this.numberPost)
+    },
+    postsCount() {
+      return this.$store.getters.postsCount
+    }
+  },
+  // computed: mapGetters(['getPosts', 'postsCount']),
+  methods: mapActions(['fetchPosts']),
   async mounted() {
-    const response = await fetch('https://jsonplaceholder.typicode.com/posts?_limit=6')
-    const posts = await response.json()
-    this.posts = posts
+    // this.$store.dispatch('fetchPosts')
+    this.fetchPosts(this.numberPost)
   }
 }
 </script>
