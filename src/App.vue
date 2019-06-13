@@ -1,17 +1,25 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <div class="post" v-for="post in posts" :key="post.id">
+      <h1>{{ post.title }}</h1>
+      <p>{{ post.body }}</p>
+    </div>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
 
 export default {
+  data() {
+    return {
+      posts: []
+    }
+  },
   name: 'app',
-  components: {
-    HelloWorld
+  async mounted() {
+    const response = await fetch('https://jsonplaceholder.typicode.com/posts?_limit=6')
+    const posts = await response.json()
+    this.posts = posts
   }
 }
 </script>
@@ -23,6 +31,13 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+  margin: 60px auto;
+  width: 600px;
+}
+
+.post {
+  border: 1px solid gray;
+  border-radius: 5px;
+  margin: 10px;
 }
 </style>
