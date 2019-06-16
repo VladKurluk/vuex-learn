@@ -2,7 +2,7 @@
   <div id="app">
     <post-form></post-form>
     
-    <input type="number" ref="val" @input="updateNumberPosts" v-model="numberOfPosts" 
+    <input type="number" ref="val" @input="updateNumberPosts" :value="numberOfPosts" 
     placeholder="Сколько нужно постов">
     <div class="post" v-for="post in getPosts" :key="post.id">
       <span>{{ `${post.id}/${postsCount}` }}</span>
