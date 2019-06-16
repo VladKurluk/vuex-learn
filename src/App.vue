@@ -2,7 +2,8 @@
   <div id="app">
     <post-form></post-form>
     
-    <input type="text" v-on:input="postUpdate" v-model="numberPost" placeholder="Сколько нужно постов">
+    <input type="number" ref="val" @input="updateNumberPosts" v-model="numberOfPosts" 
+    placeholder="Сколько нужно постов">
     <div class="post" v-for="post in getPosts" :key="post.id">
       <span>{{ `${post.id}/${postsCount}` }}</span>
       <h1>{{ post.title }}</h1>
@@ -12,7 +13,7 @@
 </template>
 
 <script>
-import {mapGetters, mapActions} from 'vuex'
+import {mapGetters, mapActions, mapMutations} from 'vuex'
 import PostForm from './components/PostForm'
 
 export default {
@@ -20,27 +21,29 @@ export default {
   components: {
     PostForm
   },
-  data() {
-    return {
-      numberPost: 2
-    }
-  },
+  // computed: mapGetters(['getPosts', 'postsCount']),
   computed: {
     getPosts() {
       return this.$store.getters.getPosts
     },
-    postUpdate() {
-      this.fetchPosts(this.numberPost)
-    },
     postsCount() {
       return this.$store.getters.postsCount
+    },
+    numberOfPosts() {
+      return this.$store.getters.numberOfPosts
     }
   },
-  // computed: mapGetters(['getPosts', 'postsCount']),
-  methods: mapActions(['fetchPosts']),
-  async mounted() {
+  methods: {
+    ...mapActions(['fetchPosts']),
+    ...mapMutations(['updateNumberOfPosts']),
+    updateNumberPosts () {
+      this.updateNumberOfPosts(this.$refs.val.value)
+      this.fetchPosts(this.numberOfPosts)
+    }
+  },
+  mounted() {
     // this.$store.dispatch('fetchPosts')
-    this.fetchPosts(this.numberPost)
+    this.fetchPosts(this.numberOfPosts)
   }
 }
 </script>
